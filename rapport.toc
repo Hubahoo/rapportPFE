@@ -1,0 +1,22 @@
+\contentsline {section}{\numberline {1}Introduction}{2}
+\contentsline {subsection}{\numberline {1.1}Pr\IeC {\'e}sentation de Thales}{2}
+\contentsline {subsubsection}{\numberline {1.1.1}Le groupe}{2}
+\contentsline {subsubsection}{\numberline {1.1.2}Thales Services}{3}
+\contentsline {subsubsection}{\numberline {1.1.3}Theresis}{3}
+\contentsline {subsection}{\numberline {1.2}Sujet de stage}{4}
+\contentsline {subsection}{\numberline {1.3}Objectif}{4}
+\contentsline {subsection}{\numberline {1.4}Suite}{4}
+\contentsline {subsection}{\numberline {1.5}Environnement de travail}{4}
+\contentsline {section}{\numberline {2}D\IeC {\'e}roulement du stage}{5}
+\contentsline {subsection}{\numberline {2.1}D\IeC {\'e}tection de personne}{6}
+\contentsline {subsubsection}{\numberline {2.1.1}Principe de la d\IeC {\'e}tection HOG}{6}
+\contentsline {subsubsection}{\numberline {2.1.2}Descripteur HOG}{7}
+\contentsline {paragraph}{D\IeC {\'e}coupage de l'image}{7}
+\contentsline {paragraph}{Calcul des gradients}{7}
+\contentsline {paragraph}{Calcul des histogrammes}{8}
+\contentsline {paragraph}{Concat\IeC {\'e}nation et normalisation}{9}
+\contentsline {subsubsection}{\numberline {2.1.3}Classifieur}{9}
+\contentsline {paragraph}{Classification}{9}
+\contentsline {paragraph}{Fen\IeC {\^e}tre glissante multi-\IeC {\'e}chelle et suppression des non-maxima}{11}
+\contentsline {subsubsection}{\numberline {2.1.4}Param\IeC {\'e}trage et r\IeC {\'e}sultats}{12}
+\contentsline {subsubsection}{\numberline {2.1.5}R\IeC {\'e}sultats}{13}
