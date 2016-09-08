@@ -1,3 +1,5 @@
+%celine.craye@ensta-paristech.fr
+
 \documentclass[12pt]{article}
 \usepackage[paper=a4paper,dvips,top=2.5cm,left=2.5cm,right=2.5cm,
     foot=2cm,bottom=2.5cm]{geometry}
@@ -8,10 +10,11 @@
 \usepackage{subcaption}
 \usepackage{amsmath}
 \usepackage{gensymb}
+\usepackage{listings}
+\lstset{language=C++}
 
 \begin{document}
 \setlipsumdefault{1-10}
-
 \tableofcontents
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%%%%%REMERCIEMENTS
@@ -28,6 +31,18 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%%%%%INTRO
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\section{Remerciements}
+Je souhaiterais remercier toutes les personnes qui m'ont apporté leur aide lors de ce stage.\\
+M\textsuperscript{r} Jean-François GOUDOU, mon superviseur au sein de l'entreprise, pour avoir permis de mettre en place le sujet, et pour sa ???guidance??? au long de celui-çi.\\
+\\
+M\textsuperscript{lle} Céline CRAYE, pour ses nombreux conseils et participations à la réalisation de ce projet.\\
+\\
+Tous les membres du laboratoire Theresis/Vision Lab dont les idées m'ont aidé à \\
+\\
+Elodie EHEM et Edith DE BENGY pour la gestion des procédures administratives nécessaire à ce stage ainsi que le service des stages de l'INSA.\\
+\\
+Enfin Murielle PRESSIGOUT, ma tutrice au sein de l'INSA pour avoir valider ce sujet et pour la lecture de ce rapport et l'évaluation de mon projet de fin d'étude.
 \pagebreak
 \section{Introduction}
 \subsection{Présentation de Thales}
@@ -88,39 +103,31 @@ Basé à Palaiseau sur le campus de TRT à Palaiseau, les principaux thèmes de 
 Theresis participe également de façon continue à une vingtaine de programmes de recherche européens et nationaux. Outre leur apport en termes de partenariats et visibilité au sein des différentes communautés scientifiques et techniques, ces projets représentent une part significative du budget annuel de Theresis.
 
 Au delà des activités de recherche, le laboratoire est doté de moyens de prototypage rapide dont notamment un démonstrateur composé d'un centre de calcul et d'un théâtre multimédia permettant d'offrir aux clients, externes ou appartenant aux différentes unités opérationnelles du groupe, la possibilité d'imaginer et d'expérimenter de nouveaux usages des systèmes de façon collaborative. \\
-
 Ce stage a été effectué au sein du laboratoire \textit{Vision and Sensing} du département Theresis, qui travaille plus particulièrement sur la vision par ordinateur et les capteurs innovants.\\
 L'un des objectifs du laboratoire est de développer et de mettre à disposition des briques technologiques abouties permettant de résoudre des problèmes d'analyse et de traitement d'images, ceci dans le but de les intégrer dans des démonstrateurs innovants.\\
 La vision par ordinateur concerne en particulier les développements d'algorithmes pour des solutions de vidéo-protection et pour des drones. \\
 \\
-L'équipe est constituée d'une quinzaine de personnes dont une partie fait également partie du laboratoire commun avec le Comissariat) l'Énergie Atomique et aux Énergies Alternatives (CEA) dans le domaine de la vision artificielle et la mise en oeuvre des approches formelles dans les logiciels critiques, baptisé VisionLab.
+L'équipe est constituée d'une quinzaine de personnes dont une partie fait également partie du laboratoire commun avec le Comissariat à l'Énergie Atomique et aux Énergies Alternatives (CEA) dans le domaine de la vision artificielle et la mise en oeuvre des approches formelles dans les logiciels critiques, baptisé VisionLab.
+\pagebreak
 \subsection{Sujet de stage}
 Smart PTZ, détection blbla milieu urbain,
-\subsection{Objectif}
+\subsubsection{Objectif}
 Acquisition de visages blabla
-\subsection{Suite}
+\subsubsection{Suite}
 Système autonome, apprentissage des zones d'intérêts ...
-\subsection{Environnement de travail}
-Système GNU/Linux (Ubuntu 14.04) 64bits, 
-OpenCV 3.1
-cmake 3.8
-g++ v?
+\subsubsection{Environnement de travail}
+\begin{itemize}
+\item Système GNU/Linux (Ubuntu 14.04.1) 64bits, 
+\item OpenCV 3.1.0
+\item cmake 3.2.2
+\item make 3.8.4
+\item gcc/g++ 4.8.4
+\end{itemize}
 Les tests sont effectués sur un PC avec un processeur Intel Core™ i5-3230M (4x2.6GHz) et 4GB de mémoire RAM.\\
 Sauf mention contraire, les performances mesurées le sont sur cette plateforme.
-% Contexte
-% -au sein de l'entreprise
-% -au sein de l'equipe
-% -au sein du domaine technique
-% But du stage
-% -resultats attendus
-% -precedents resultats dans le domaine
-% \pagebreak
-% \section{Deroulement}
-% \subsection{Contrôle caméra et flux vidéo}
-
 \pagebreak
 \section{Déroulement du stage}
-
+\subsection{Contrôle caméra et flux vidéo}
 \pagebreak
 \subsection{Détection de personne}
 Afin de mettre en place un suivi efficace des personnes, il faut commencer par être capable de détecter ces personnes. Il a donc fallu en premier lieu décider d'une méthode de détection de personnes adaptée à notre application. De nombreuses méthodes différentes existent dans ce domaine, mais l'environnement dans lequel nous effectuons cette détection fixe nos besoins:\\
@@ -365,7 +372,24 @@ Le second paramètre est le seuil à partir duquel une fenêtre est considérée
 \end{figure}\\
 \\
 Ce seuil n'influence pas le temps de calcul de l'algorithme, c'est donc un compromis entre le taux de détection et le taux de faux positifs. \\Notre priorité étant d'avoir très peu de faux positifs, le seuil a été mis à une valeur $\tau=0.35$ permettant de supprimer pratiquement tout les faux positifs dans notre environnement de test.
-
+\subsubsection{Implémenation}
+La détection est implémentée sous la forme d'une classe \verb!detector! dont la déclaration est présentée ci-dessous.\\
+\begin{lstlisting}[frame=single]
+class detector{
+public:
+  detector(float threshold=0, float scale=1.05, float recTh=2);
+  void detection(cv::Mat &frame,std::vector<cv::Rect> &det);
+private:
+  cv::HOGDescriptor hogD;  //descriptor	
+  float threshold;	   //detection threshold	
+  float scale;		   //windows scaling	
+  float recTh;		   //non-maxima supression threshold
+};
+\end{lstlisting}
+Le constructeur permet de régler les paramètres du classifieur et d'initialiser le détecteur avec le descripteur HOG-D entrainé sur les personnes.\\
+Ces paramètres sont stockés dans la classe et seront utilisés lors de l'appel de la fonction \verb!detection()! qui prend en argument l'image sur laquelle effectuer la détection (\verb!frame!) et le vecteur de rectangles dans lequel sera stocké les détections (\verb!det!).\\
+\\
+Cette fonction \verb!detection()! applique la détection multi-échelle, et l'algorithme de suppression des non-maxima, et ajoute les rectangles obtenues dans le vecteur de rectangle \verb!det!.
 \subsubsection{Résultats}
 Après réglage des paramètres de l'algorithme, on obtient un détecteur nous permettant d'avoir un taux de faux positifs pratiquement nuls et un très bon taux de détection pour les personnes de face et de dos.\\
 Pour des personnes représentés par plus de 50 pixels en hauteur, la détection est presque parfaite, la personne n'est que très rarement non-détectée, et ces pertes de détections seront gérées au niveau supérieur par le suivi.\\
@@ -374,5 +398,14 @@ Les personnes de profils ont un taux de détection légèrement plus variable, m
 Les faux positifs sont très rares, et éliminés au niveau supérieur également, toute détection intermittente étant filtrée par le suivi qui sélectionne les détections avec une certaine constance.\\
 \\
 On a donc un système de détection robuste, ce qui nous permet d'avoir de bonnes bases pour construire notre système d'identification et de suivi des personnes.
+\pagebreak
+\subsection{Identification des personnes}
+Le but est d'acquérir des informations sur chaque personne passant dans le champs de vision de la caméra, pour ça il est nécessaire de zoomer sur chacune afin d'obtenir une image plus détaillée.
+Si possible (personne de face), on peut également faire une détection du visage et zoomer encore plus afin d'acquérir des images suffisament haute résolution pour une future reconnaissance.\\
+\\
+Cette opération de zoom/acquisition est relativement simple une fois une personne détectée (il suffit de régler le niveau de zoom de la caméra et les angles \textit{pan} et \textit{tilt}). complexity arise when deux personnes ou plus sont dans le champ de cette caméra.\\
+Il faut alors mettre en place une méthode d'identification des personnes et un moyen de décider sur quelle personne effectuer cette acquisition. Une fois l'acquisition effectuée, il sera aussi nécessaire de pouvoir ré-identifier les personnes présentes dans l'image afin de ne pas effectuer l'action deux fois sur la même personne.\\
+\\
+Le but est donc d'avoir un système capable de différencier les personnes présentes dans une image, de décider sur quelle personne se concentrer en priorité, et après un zoom/dé-zoom sur cette personne, de ré-identifier les personnes présentes dans l'image.
 
 \end{document}
